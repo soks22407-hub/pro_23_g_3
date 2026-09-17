@@ -3,17 +3,25 @@ import 'package:pro_23_g_3/router/app_page.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pro_23_g_3/router/app_route.dart';
+import 'package:pro_23_g_3/service/storage_service.dart';
 import 'binding/initial_binding.dart';
 import 'core/translations/app_translations.dart';
 import 'core/value/app_color.dart';
 
 Future<void> main() async {
   await GetStorage.init();
-  runApp(const MyApp());
+  final storage = StorageService();
+  final savedLocaleCode = await storage.getString('locale');
+  final initialLocale = savedLocaleCode == 'km'
+      ? const Locale('km', 'KH')
+      : const Locale('en', 'US');
+  runApp(MyApp(initialLocale: initialLocale));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.initialLocale});
+
+  final Locale initialLocale;
 
   // This widget is the root of your application.
   @override
@@ -46,7 +54,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       translations: AppTranslations(),
 
-      locale: const Locale('en', 'US'),
+      locale: initialLocale,
 
       fallbackLocale: const Locale('en', 'US'),
       initialBinding: InitialBinding(),

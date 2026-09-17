@@ -8,6 +8,7 @@ import '../../core/value/app_color.dart';
 import '../../model/user_model.dart';
 import '../../repository/user_repository.dart';
 import '../../router/app_route.dart';
+import '../../service/storage_service.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -54,6 +55,11 @@ class _SettingScreenState extends State<SettingScreen> {
         setState(() => isOnline = false);
       }
     }
+  }
+
+  Future<void> _changeLocale(Locale locale) async {
+    Get.updateLocale(locale);
+    await Get.find<StorageService>().saveString('locale', locale.languageCode);
   }
 
   Future<void> _loadProfile() async {
@@ -189,13 +195,11 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               ),
               onTap: () {
-                setState(() {
-                  if (Get.locale?.languageCode == 'en') {
-                    Get.updateLocale(const Locale('km', 'KH'));
-                  } else {
-                    Get.updateLocale(const Locale('en', 'US'));
-                  }
-                });
+                final newLocale = Get.locale?.languageCode == 'km'
+                    ? const Locale('en', 'US')
+                    : const Locale('km', 'KH');
+                _changeLocale(newLocale);
+                setState(() {});
               },
             ),
             _SettingTile(

@@ -8,6 +8,7 @@ import '../../core/value/app_color.dart';
 import '../../model/user_model.dart';
 import '../../repository/user_repository.dart';
 import '../../router/app_route.dart';
+import '../../service/storage_service.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -39,6 +40,11 @@ class _AppDrawerState extends State<AppDrawer> {
   void dispose() {
     _connectivityTimer?.cancel();
     super.dispose();
+  }
+
+  Future<void> _changeLocale(Locale locale) async {
+    Get.updateLocale(locale);
+    await Get.find<StorageService>().saveString('locale', locale.languageCode);
   }
 
   Future<void> _checkInternetConnection() async {
@@ -165,14 +171,14 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
                 const Divider(height: 3, color: Colors.black12),
                 ListTile(
-                  onTap: () {
-                    setState(() {
-                      if (Get.locale?.languageCode == 'en') {
-                        Get.updateLocale(const Locale('km', 'KH'));
-                      } else {
-                        Get.updateLocale(const Locale('en', 'US'));
-                      }
-                    });
+                  onTap: () async {
+                    final newLocale = Get.locale?.languageCode == 'en'
+                        ? const Locale('km', 'KH')
+                        : const Locale('en', 'US');
+
+                    Get.updateLocale(newLocale);
+                    await Get.find<StorageService>().saveString('locale', newLocale.languageCode);
+
                     Navigator.pop(context);
                   },
                   leading: const Icon(

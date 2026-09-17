@@ -78,10 +78,7 @@ class _PostFormScreenState extends State<CreatePostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('new_post'.tr),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text('new_post'.tr), centerTitle: true),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -158,32 +155,32 @@ class _PostFormScreenState extends State<CreatePostScreen> {
                 ),
                 child: selectedImage == null
                     ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add_photo_alternate_outlined,
-                      size: 48,
-                      color: AppColor.primary,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'tap_to_select_image'.tr,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                )
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add_photo_alternate_outlined,
+                            size: 48,
+                            color: AppColor.primary,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'tap_to_select_image'.tr,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      )
                     : ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.file(
-                    selectedImage!,
-                    width: double.infinity,
-                    height: 180,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(
+                          selectedImage!,
+                          width: double.infinity,
+                          height: 180,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
               ),
             ),
 
@@ -219,12 +216,13 @@ class _PostFormScreenState extends State<CreatePostScreen> {
               },
               title: Text(
                 'published'.tr,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
               subtitle: Text(
-                published
-                    ? 'published_subtitle'.tr
-                    : 'unpublished_subtitle'.tr,
+                published ? 'published_subtitle'.tr : 'unpublished_subtitle'.tr,
                 style: const TextStyle(color: Colors.grey, fontSize: 13),
               ),
               activeColor: Colors.white,
@@ -238,20 +236,20 @@ class _PostFormScreenState extends State<CreatePostScreen> {
             // 5. Create Button
             // =========================
             Obx(
-                  () => SizedBox(
+              () => SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton.icon(
                   onPressed: controller.isCreating.value ? null : createPost,
                   icon: controller.isCreating.value
                       ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
                       : const Icon(Icons.check),
                   label: Text(
                     controller.isCreating.value
