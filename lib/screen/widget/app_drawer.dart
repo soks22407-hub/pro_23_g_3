@@ -32,7 +32,7 @@ class _AppDrawerState extends State<AppDrawer> {
     // Periodically check connection status every 5 seconds
     _connectivityTimer = Timer.periodic(
       const Duration(seconds: 5),
-          (_) => _checkInternetConnection(),
+      (_) => _checkInternetConnection(),
     );
   }
 
@@ -104,14 +104,16 @@ class _AppDrawerState extends State<AppDrawer> {
                           child: ClipOval(
                             child: hasPhoto
                                 ? Image.network(
-                              currentUser!.imageUrl!,
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return _InitialsAvatar(user: currentUser!);
-                              },
-                            )
+                                    currentUser!.imageUrl!,
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return _InitialsAvatar(
+                                        user: currentUser!,
+                                      );
+                                    },
+                                  )
                                 : _InitialsAvatar(user: currentUser),
                           ),
                         ),
@@ -172,14 +174,19 @@ class _AppDrawerState extends State<AppDrawer> {
                 const Divider(height: 3, color: Colors.black12),
                 ListTile(
                   onTap: () async {
-                    final newLocale = Get.locale?.languageCode == 'en'
-                        ? const Locale('km', 'KH')
-                        : const Locale('en', 'US');
+                    final isKhmer = Get.locale?.languageCode == 'km';
+                    final newLocale = isKhmer
+                        ? const Locale('en', 'US')
+                        : const Locale('km', 'KH');
+
+                    await Get.find<StorageService>().saveString(
+                      'locale',
+                      newLocale.languageCode,
+                    );
 
                     Get.updateLocale(newLocale);
-                    await Get.find<StorageService>().saveString('locale', newLocale.languageCode);
 
-                    Navigator.pop(context);
+                    if (context.mounted) Navigator.pop(context);
                   },
                   leading: const Icon(
                     Icons.translate,
@@ -195,7 +202,6 @@ class _AppDrawerState extends State<AppDrawer> {
                     style: const TextStyle(color: AppColor.primary),
                   ),
                 ),
-
 
                 ListTile(
                   onTap: () {
@@ -260,10 +266,11 @@ class _InitialsAvatar extends StatelessWidget {
   final UserModel? user;
 
   String get _initials {
-    final String source = (user?.nickName?.isNotEmpty == true
-        ? user!.nickName!
-        : (user?.username ?? ''))
-        .trim();
+    final String source =
+        (user?.nickName?.isNotEmpty == true
+                ? user!.nickName!
+                : (user?.username ?? ''))
+            .trim();
 
     if (source.isEmpty) return 'AD';
 

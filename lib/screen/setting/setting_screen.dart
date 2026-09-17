@@ -33,7 +33,7 @@ class _SettingScreenState extends State<SettingScreen> {
     // Periodically check connection status every 5 seconds
     _connectivityTimer = Timer.periodic(
       const Duration(seconds: 5),
-          (_) => _checkInternetConnection(),
+      (_) => _checkInternetConnection(),
     );
   }
 
@@ -95,10 +95,7 @@ class _SettingScreenState extends State<SettingScreen> {
         currentUser?.imageUrl != null && currentUser!.imageUrl!.isNotEmpty;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('setting'.tr),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text('setting'.tr), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -122,7 +119,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     backgroundImage: hasPhoto
                         ? NetworkImage(currentUser!.imageUrl!)
                         : const AssetImage('assets/images/profile.webp')
-                    as ImageProvider,
+                              as ImageProvider,
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -132,15 +129,17 @@ class _SettingScreenState extends State<SettingScreen> {
                         Text(
                           'signed_in_as'.tr,
                           style: const TextStyle(
-                              color: Colors.white, fontSize: 13),
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           loadingProfile
                               ? 'Loading...'
                               : (currentUser?.nickName?.isNotEmpty == true
-                              ? currentUser!.nickName!
-                              : (currentUser?.username ?? 'Admin')),
+                                    ? currentUser!.nickName!
+                                    : (currentUser?.username ?? 'Admin')),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -151,7 +150,9 @@ class _SettingScreenState extends State<SettingScreen> {
                         Text(
                           currentUser?.username ?? '',
                           style: const TextStyle(
-                              color: Colors.white, fontSize: 13),
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
                         ),
                       ],
                     ),
@@ -194,11 +195,17 @@ class _SettingScreenState extends State<SettingScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              onTap: () {
-                final newLocale = Get.locale?.languageCode == 'km'
+              onTap: () async {
+                final isKhmer = Get.locale?.languageCode == 'km';
+                final newLocale = isKhmer
                     ? const Locale('en', 'US')
                     : const Locale('km', 'KH');
-                _changeLocale(newLocale);
+
+                await Get.find<StorageService>().saveString(
+                  'locale',
+                  newLocale.languageCode,
+                );
+                Get.updateLocale(newLocale);
                 setState(() {});
               },
             ),
@@ -327,20 +334,13 @@ class _SettingTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
           child: Row(
             children: [
-              Icon(
-                icon,
-                color: iconColor ?? AppColor.textSecondary,
-                size: 24,
-              ),
+              Icon(icon, color: iconColor ?? AppColor.textSecondary, size: 24),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(fontSize: 15),
-                    ),
+                    Text(title, style: const TextStyle(fontSize: 15)),
                     if (subtitle != null) ...[
                       const SizedBox(height: 2),
                       Text(

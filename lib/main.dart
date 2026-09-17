@@ -10,8 +10,10 @@ import 'core/value/app_color.dart';
 
 Future<void> main() async {
   await GetStorage.init();
-  final storage = StorageService();
+  WidgetsFlutterBinding.ensureInitialized();
+  final storage = Get.put(StorageService());
   final savedLocaleCode = await storage.getString('locale');
+
   final initialLocale = savedLocaleCode == 'km'
       ? const Locale('km', 'KH')
       : const Locale('en', 'US');
